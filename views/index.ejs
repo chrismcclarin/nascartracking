@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fantasy Nascar</title>
+</head>
+<body>
+    <header>
+    <h3>Fantasy Nascar</h3>
+    <nav>
+        <% if (!(session+1)) {%>
+        <a href="/login">Login</a>
+        <a href="/signup">Signup</a>
+        <% } else { %>
+        <a href="/logout">Logout</a>
+        <% } %>
+    </nav>
+    </header>
+
+    <% 
+    if (allUsers[session]?.name == 'admin') {%>
+        <form method="post" action='/drivers'>
+            <input type = 'submit' value="Download Drivers">
+        </form>
+        <form method="post" action='/tracks'>
+            <input type = 'submit' value="Download Tracks">
+        </form>
+        <form method="post" action='/reset'>
+            <input type = 'submit' value="Reset Users">
+        </form>
+    <% } %>
+
+    <table>
+        <tr>
+            <td>Name</td>
+            <td>Points</td>
+            <td>Daytona 500</td>
+            <% for(let i = 2; i < tracks.length; i++) { %>
+            <td><%= tracks[i].track.name%></td>
+            <% } %>
+        </tr>
+        <% for(let i = 0; i < allUsers.length; i++) { %>
+        <tr>
+            <% if (allUsers[i].name != 'admin'){ %>
+            <td><%= allUsers[i].name %></td>
+            <%}%>
+            <% if (allUsers[session] != allUsers[i]) {%>
+            <td><%= allUsers[i].points %></td>
+            <td>
+                <%
+                if (typeof(allUsers[i][tracks[1]?.races[2].id])== 'object') {%>
+                <ul>
+                    <li><%= allUsers[i][tracks[1]?.races[2].id][0] %></li>
+                    <li><%= allUsers[i][tracks[1]?.races[2].id][1] %></li>
+                    <li><%= allUsers[i][tracks[1]?.races[2].id][2] %></li>
+                </ul>
+                <% if (allUsers[session]?.name == 'admin'){ %>
+                <form method="post" action="/points" id='points'>
+                    <input type='hidden' name="points" value='<%= allUsers[i].name%>'>
+                    <input type='hidden' name="points" value='<%= allUsers[i].password%>'>
+                    <input type='hidden' name="points" value='<%= tracks[1]?.races[2].id%>'>
+                    <input type='hidden' name="points" value='<%= allUsers[i][tracks[1]?.races[2].id][0] %>'>
+                    <input type='hidden' name="points" value='<%= allUsers[i][tracks[1]?.races[2].id][1] %>'>
+                    <input type='hidden' name="points" value='<%= allUsers[i][tracks[1]?.races[2].id][2] %>'>
+                    <input type="submit" value="Get Points">
+                </form>
+                <%}%>
+                <%}%>
+            </td>
+            <% for(let j = 3; j < tracks.length + 2; j++) { %>
+            <td>
+                <% 
+                if (typeof(allUsers[i][tracks[j]?.races[0].id])== 'object') {%>
+                <ul>
+                    <li><%= allUsers[i][tracks[j]?.races[0].id][0] %></li>
+                    <li><%= allUsers[i][tracks[j]?.races[0].id][1] %></li>
+                    <li><%= allUsers[i][tracks[j]?.races[0].id][2] %></li>
+                </ul>
+                <% if (allUsers[session]?.name == 'admin'){ %>
+                <form method="post" action="/points" id='points'>
+                    <input type='hidden' name="points" value='<%= allUsers[i].name%>'>
+                    <input type='hidden' name="points" value='<%= allUsers[i].password%>'>
+                    <input type='hidden' name="points" value='<%= tracks[j]?.races[0].id%>'>
+                    <input type='hidden' name="points" value='<%= allUsers[i][tracks[j]?.races[0].id][0] %>'>
+                    <input type='hidden' name="points" value='<%= allUsers[i][tracks[j]?.races[0].id][1] %>'>
+                    <input type='hidden' name="points" value='<%= allUsers[i][tracks[j]?.races[0].id][2] %>'>
+                    <input type="submit" value="Get Points">
+                </form>
+                <%}%>
+                <%}%>
+            </td>
+            <% } %>
+            <% } else { %>
+            <% if (allUsers[session]?.name != 'admin'){ %>
+            <td><%= allUsers[i].points %></td>
+            <td>
+                
+                <select id="nascar" name='driv' form='NCar0'>
+                <% for(let k = 0; k < drivers.length; k++) { %>
+                        <option value='<%= drivers[k].full_name %>'><%= drivers[k].full_name %></option>
+                <% } %>
+                </select>
+                <select name='driv' form='NCar0'>
+                <% for(let k = 0; k < drivers.length; k++) { %>
+                        <option value='<%= drivers[k].full_name %>'><%= drivers[k].full_name %></option>
+                <% } %>
+                </select>
+                <select name='driv' form='NCar0'>
+                <% for(let k = 0; k < drivers.length; k++) { %>
+                        <option value='<%= drivers[k].full_name %>'><%= drivers[k].full_name %></option>
+                <% } %>
+                </select>
+                <form method="post" action="/selection" id='NCar0'>
+                    <input type='hidden' name="driv" value='<%= tracks[1]?.races[2].id%>'>
+                    <input type='hidden' name="driv" value='<%= allUsers[session].name%>'>
+                    <input type='hidden' name="driv" value='<%= allUsers[session].password%>'>
+                    <input type="submit">
+                </form>
+        </td>
+            <% for(let j = 2; j < tracks.length; j++) { %>
+            <td>
+                
+                    <select id="nascar" name='driv' form='NCar<%=j%>'>
+                    <% for(let k = 0; k < drivers.length; k++) { %>
+                            <option value='<%= drivers[k].full_name %>'><%= drivers[k].full_name %></option>
+                    <% } %>
+                    </select>
+                    <select name='driv' form='NCar<%=j%>'>
+                    <% for(let k = 0; k < drivers.length; k++) { %>
+                            <option value='<%= drivers[k].full_name %>'><%= drivers[k].full_name %></option>
+                    <% } %>
+                    </select>
+                    <select name='driv' form='NCar<%=j%>'>
+                    <% for(let k = 0; k < drivers.length; k++) { %>
+                            <option value='<%= drivers[k].full_name %>'><%= drivers[k].full_name %></option>
+                    <% } %>
+                    </select>
+                    <form method="post" action="/selection" id='NCar<%=j%>'>
+                        <input type='hidden' name="driv" value='<%= tracks[j]?.races[0].id%>'>
+                        <input type='hidden' name="driv" value='<%= allUsers[session].name%>'>
+                        <input type='hidden' name="driv" value='<%= allUsers[session].password%>'>
+                        <input type="submit">
+                    </form>
+            </td>
+            <% } %>
+            <% } %>
+            <% } %>
+        </tr>
+        <% } %>
+    </table>
+</body>
+<script>
+
+</script>
+</html>
