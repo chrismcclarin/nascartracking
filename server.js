@@ -32,8 +32,8 @@ app.use('/', usersController)
 
 
 // Express web server
-app.listen(port, () => {
-    console.log(`listening on port`, process.env.PORT || 3000)
+app.listen(PORT, () => {
+    console.log(`listening on port`)
 });
 
 // //             <% for(let i = 2; i < races.length; i++) { %>
